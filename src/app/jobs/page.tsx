@@ -2,7 +2,7 @@
 import React from "react";
 
 import { Search } from "lucide-react";
-import { Badge } from "src/components/UI";
+import { Badge, BadgeLink } from "src/components/UI";
 
 const tempText: string = `Pursuing a Bachelors (Juniors/Seniors only), Masters, or PhD with
 a focus on subjects related to software development, computer
@@ -17,13 +17,32 @@ communication skills Exposure to web application development,
 Unix/Linux environments, distributed and parallel systems, and
 networking is a plus Ability to work onsite in San Francisco or
 New York`;
-
+const tempJobs = [
+  {
+    id: 1,
+  },
+  {
+    id: 2,
+  },
+  {
+    id: 3,
+  },
+  {
+    id: 4,
+  },
+  {
+    id: 5,
+  },
+  {
+    id: 6,
+  },
+];
 const Jobs = () => {
   return (
     <div className="flex h-full w-96 max-w-full flex-col px-1 font-sans md:w-[1008px]">
       <h2 className="text-2xl font-semibold my-3">Jobs</h2>
       <section className="w-full h-60 bg-[#4F46E5] rounded-xl"></section>
-      <div className="w-full flex justify-between my-5 gap-3">
+      <div className="w-full flex justify-between mt-5 mb-2 gap-3">
         <div className="relative w-full">
           <div className="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
             <Search size={15} />
@@ -34,6 +53,7 @@ const Jobs = () => {
             placeholder="Search Jobs..."
           />
         </div>
+
         <div>
           <button className="relative inline-flex items-center justify-center  p-0.5 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-blue-500 to-blue-500 group-hover:from-cyan-500 group-hover:to-blue-500 hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-200 ">
             <span className="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white  rounded-md group-hover:bg-opacity-0">
@@ -42,20 +62,50 @@ const Jobs = () => {
           </button>
         </div>
       </div>
+      <div className="mt-2 mb-5 flex justify-center flex-wrap gap-2">
+        <BadgeLink>Frontend </BadgeLink>
+        <BadgeLink>Backend </BadgeLink>
+        <BadgeLink>Data Scientist </BadgeLink>
+        <BadgeLink>Full Stack </BadgeLink>
+        <BadgeLink>Blockchain Developer </BadgeLink>
+        <BadgeLink>Security Engineer</BadgeLink>
+        <BadgeLink>AI Engineer </BadgeLink>
+        <BadgeLink>Dev Rel</BadgeLink>
+        <BadgeLink>ML Engineer</BadgeLink>
+        <BadgeLink>Game Developer</BadgeLink>
+      </div>
       <section className=" flex w-full flex-col  justify-around gap-7 rounded-xl bg-gray-100 px-8 py-8 md:grow">
-        <div className=" flex gap-5">
-          <div className="flex h-[150px] min-w-[150px] rounded-xl bg-[#030712]"></div>
-          <div className={` flex-auto p-4 bg-white rounded-xl`}>
-            <span className="flex h-10 text-lg font-semibold">
-              Engineering Internship Summer 2025
-            </span>
-            <div className="flex gap-2">
-              <Badge>Research</Badge>
-              <Badge>Frontend</Badge>
-              <Badge>Solidity</Badge>
-            </div>
-            {/* <p className="text-sm">{truncateText(tempText, 300)}</p> */}
-          </div>
+        <div className=" flex flex-col gap-5">
+          {tempJobs.map(({ id }) => {
+            return (
+              <div
+                className={`w-full flex  gap-3 p-4 bg-white rounded-xl`}
+                key={id}
+              >
+                <div className="flex h-[120px] min-w-[120px] rounded-xl bg-[#030712]"></div>
+
+                <div className="w-full h-full flex flex-col gap-3 p-4 bg-white rounded-xl">
+                  <span className="flex  text-lg font-semibold">
+                    Engineering Internship Summer 2025
+                  </span>
+                  <div className="flex gap-2">
+                    <Badge>Research</Badge>
+                    <Badge>Frontend</Badge>
+                    <Badge>Solidity</Badge>
+                  </div>
+                  <p className="text-gray-400 text-xs font-semibold">Remote</p>
+                </div>
+                <div className="py-3">
+                  <button
+                    type="button"
+                    className="text-blue-700 h-10 hover:text-white border border-blue-700 hover:bg-[#4F46E5] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                  >
+                    Apply
+                  </button>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </section>
     </div>

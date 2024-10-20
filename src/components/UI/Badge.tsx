@@ -10,7 +10,7 @@ export default function Badge({ children, className }: BadgeProps) {
   return (
     <span
       className={cn(
-        "cursor-pointer bg-[#EDE9FE] text-[#818CF8] rounded-full font-medium text-xs py-1 px-2.5 ",
+        "cursor-pointer bg-[#EDE9FE] text-[#4F46E5] rounded-full font-medium text-xs py-1 px-2.5 ",
         className
       )}
     >

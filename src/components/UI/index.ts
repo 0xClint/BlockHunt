@@ -1,2 +1,5 @@
 import Badge from "./Badge";
-export { Badge };
+import BadgeLink from "./BadgeLink";
+import BadgeStatus from "./BadgeStatus";
+
+export { Badge, BadgeLink, BadgeStatus };

@@ -4,14 +4,13 @@
 @tailwind utilities;
 
 :root {
-  /* Palette */
-  --palette-bg-black: #fff;
-  --palette-bg-white: rgb(21, 26, 38);
+  /* ******************color */
+  --color-primary: 166, 208, 98;
+  --color-secondary: 239, 175, 122;
+  --color-secondary-100: 239, 175, 122;
+  --color-tertiary: 138, 102, 78;
 
-  /* Indicates that the element can be rendered using 
-   * the operating system dark color scheme. 
-   * https://developer.mozilla.org/en-US/docs/Web/CSS/color-scheme */
-  color-scheme: light;
+  /* --color-gray-1 */
 }
 
 *,

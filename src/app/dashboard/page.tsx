@@ -10,47 +10,68 @@ import {
 } from "@coinbase/onchainkit/theme";
 import { SquarePen } from "lucide-react";
 import { Chip } from "@nextui-org/react";
+import { Badge, BadgeStatus } from "src/components/UI";
+
+const tempJobs = [
+  {
+    id: 1,
+  },
+  {
+    id: 2,
+  },
+  {
+    id: 3,
+  },
+  {
+    id: 4,
+  },
+  {
+    id: 5,
+  },
+  {
+    id: 6,
+  },
+];
 
 const Dashboard = () => {
   return (
     <div className="flex h-full w-96 max-w-full flex-col px-1 font-sans md:w-[1008px]">
-      <h2 className="text-2xl font-semibold my-3">
-        Job Dashboard
-        <span className="ml-3">
-          <button
-            type="button"
-            data-testid="ockConnectButton"
-            className={cn(
-              pressable.primary,
-              dsText.headline,
-              color.inverse,
-              "inline-flex min-w-[100px] items-center justify-center gap-2 rounded-xl px-4 py-3"
-            )}
-          >
-            Edit
-            <SquarePen size={18} />
-          </button>
-        </span>
-      </h2>
+      <h2 className="text-2xl font-semibold my-3">Job Dashboard</h2>
 
-      <section className=" flex w-full flex-col  justify-around gap-7 rounded-xl bg-gray-100 px-2 py-8 md:grow">
-        <div className=" flex gap-5 px-5">
-          <div className="flex h-[150px] min-w-[150px] rounded-xl bg-[#030712]"></div>
-          <div className={` flex-auto p-4 bg-white rounded-xl`}>
-            <span className="flex h-10 text-lg font-semibold">
-              Job Profile
-              <span className="ml-2 py-auto">
-                <Chip color="primary" size="sm">
-                  Status
-                </Chip>
-              </span>
-            </span>
-            <p className="text-sm">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-              enim ad minim veniam, quis nostrud exercitation ullamco...
-            </p>
-          </div>
+      <section className=" flex w-full flex-col  justify-around gap-7 rounded-xl bg-gray-100 p-8 md:grow">
+        <div className=" flex flex-col gap-5">
+          {tempJobs.map(({ id }) => {
+            return (
+              <div
+                className={`w-full flex  gap-3 p-4 bg-white rounded-xl`}
+                key={id}
+              >
+                <div className="flex h-[120px] min-w-[120px] rounded-xl bg-[#030712]"></div>
+
+                <div className="w-full h-full flex flex-col gap-3 p-4 bg-white rounded-xl">
+                  <span className="flex  text-lg font-semibold">
+                    Engineering Internship Summer 2025
+                  </span>
+                  <div className=" flex-center justify-start">
+                    <BadgeStatus status="accepted">Accepted</BadgeStatus>
+                  </div>
+                  <div className="flex gap-2">
+                    <Badge>Research</Badge>
+                    <Badge>Frontend</Badge>
+                    <Badge>Solidity</Badge>
+                  </div>
+                </div>
+                <div className="py-3 min-w-[105px]">
+                  <button
+                    type="button"
+                    className="text-blue-700 h-10 hover:text-white border border-blue-700 hover:bg-[#4F46E5] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                  >
+                    Get Stake
+                  </button>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </section>
     </div>
