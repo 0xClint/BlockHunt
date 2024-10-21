@@ -96,9 +96,10 @@ const Jobs = () => {
                     {info.company}
                   </span>
                   <div className="flex gap-2">
-                    {info.categories?.map((item) => {
-                      return <Badge key={item}>{item}</Badge>;
-                    })}
+                    {info?.categories?.length > 0 &&
+                      info.categories.map((item) => {
+                        return <Badge key={item}>{item}</Badge>;
+                      })}
                   </div>
                   <p className=" text-[14px] text-[#4B5563]">
                     {truncateText(info.description, 200)}
