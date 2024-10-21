@@ -17,7 +17,7 @@ import {
 } from "@coinbase/onchainkit/wallet";
 import { cn, text as dsText, pressable } from "@coinbase/onchainkit/theme";
 import { useRouter } from "next/navigation";
-import { Briefcase, UserRoundPen } from "lucide-react";
+import { Briefcase, UserRoundPen, UserRoundSearch } from "lucide-react";
 type WalletWrapperParams = {
   text?: string;
   className?: string;
@@ -73,6 +73,19 @@ export default function WalletWrapper({
               <UserRoundPen size={18} />
             </div>
             <span className={cn(dsText.body, "pl-6")}>Job Profile</span>
+          </button>
+          <button
+            type="button"
+            className={cn(
+              pressable.default,
+              "relative flex w-full items-center px-4 pt-3 pb-4"
+            )}
+            onClick={() => router.push("/recruit")}
+          >
+            <div className="absolute left-4 flex h-[1.125rem] w-[1.125rem] items-center justify-center">
+              <UserRoundSearch size={18} />
+            </div>
+            <span className={cn(dsText.body, "pl-6")}>Recruit</span>
           </button>
           <WalletDropdownLink icon="wallet" href="https://wallet.coinbase.com">
             Go to Wallet Dashboard

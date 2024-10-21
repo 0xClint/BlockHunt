@@ -28,7 +28,8 @@ contract JobApplicants is JobNFT {
     }
 
     mapping(uint256 => Applicant[]) public jobApplicants;
-    mapping(uint256 => address) public jobResult;
+    
+    mapping(uint256 => address[]) public jobResult;
 
     function applyToJob(uint256 jobTokenId, string memory resumeCID) public {
         require(ownerOf(jobTokenId) != address(0), "Job does not exist");
@@ -45,14 +46,16 @@ contract JobApplicants is JobNFT {
         return jobApplicants[jobTokenId];
     }
 
-    function decideResult(uint256 jobTokenId, address selectedApplicant) public {
+    function decideResult(uint256 jobTokenId, address[] memory selectedApplicants) public {
         require(ownerOf(jobTokenId) == msg.sender, "Only job owner can select");
-        require(jobResult[jobTokenId] == address(0), "Result already declared");
+        require(jobResult[jobTokenId].length == 0, "Result already declared");
 
-        jobResult[jobTokenId] = selectedApplicant;
+        for (uint256 i = 0; i < selectedApplicants.length; i++) {
+            jobResult[jobTokenId].push(selectedApplicants[i]);
+        }
     }
 
-    function getJobResult(uint256 jobTokenId) public view returns (address) {
+    function getJobResult(uint256 jobTokenId) public view returns (address[] memory) {
         return jobResult[jobTokenId];
     }
 }

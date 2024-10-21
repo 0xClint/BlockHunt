@@ -6,6 +6,7 @@ import "@coinbase/onchainkit/styles.css";
 import "@rainbow-me/rainbowkit/styles.css";
 import dynamic from "next/dynamic";
 import AppLayout from "src/components/AppLayout";
+import { JobProvider } from "src/contexts/JobsProvider";
 
 const OnchainProviders = dynamic(
   () => import("src/components/OnchainProviders"),
@@ -38,7 +39,12 @@ export default function RootLayout({
     <html lang="en">
       <body className="flex items-center justify-center">
         <OnchainProviders>
-          <AppLayout>{children}</AppLayout>
+          <JobProvider>
+            <AppLayout>
+              <div id="portal"></div>
+              <>{children}</>
+            </AppLayout>
+          </JobProvider>
         </OnchainProviders>
       </body>
     </html>

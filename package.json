@@ -18,7 +18,9 @@
   },
   "dependencies": {
     "@coinbase/onchainkit": "^0.33.6",
+    "@lighthouse-web3/sdk": "^0.3.7",
     "@nextui-org/react": "^2.4.8",
+    "axios": "^1.7.7",
     "clsx": "^2.1.1",
     "framer-motion": "^11.11.9",
     "lucide-react": "^0.453.0",
@@ -27,7 +29,8 @@
     "react": "^18",
     "react-dom": "^18",
     "siwe": "^2.3.2",
-    "tailwind-merge": "^2.5.4"
+    "tailwind-merge": "^2.5.4",
+    "zustand": "^5.0.0"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.8.0",
