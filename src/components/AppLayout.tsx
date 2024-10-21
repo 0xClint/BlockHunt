@@ -15,8 +15,12 @@ const AppLayout = ({ children }: LayoutProps) => {
     <div className="flex flex-col min-h-screen">
       <section className="mt-6 mb-6 flex w-full flex-col md:flex-row">
         <div className="flex w-full flex-row items-center justify-between gap-2 md:gap-0">
-          <Link href={"/"} title="BlockHunt" className="font-semibold text-2xl">
-            BlockHunt
+          <Link
+            href={"/"}
+            title="BlockHunt"
+            className="font-semibold text-2xl flex flex-center gap-3"
+          >
+            <img src={"/Logo.png"} className="w-10 h-10" /> BlockHunt
           </Link>
           <div className="flex items-center gap-3">
             <Link href="/">
