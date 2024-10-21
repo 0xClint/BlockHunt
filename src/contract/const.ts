@@ -1,4 +1,4 @@
-export const CONTRACT_ADDRESS = "0x51F24aF0A5bfC2258C18e9ba4bfBC0946a73da2A";
+export const CONTRACT_ADDRESS = "0x6be05EC7C7A2AC8F5fd4bf71FcD2B7a00C102255";
 export const CONTRACT_ABI = [
   {
     inputs: [
@@ -359,6 +359,29 @@ export const CONTRACT_ABI = [
         name: "selectedApplicants",
         type: "address[]",
       },
+      {
+        internalType: "string",
+        name: "newJobURI",
+        type: "string",
+      },
+    ],
+    name: "decideAndUpdateJobURI",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "jobTokenId",
+        type: "uint256",
+      },
+      {
+        internalType: "address[]",
+        name: "selectedApplicants",
+        type: "address[]",
+      },
     ],
     name: "decideResult",
     outputs: [],
@@ -558,6 +581,24 @@ export const CONTRACT_ABI = [
     type: "function",
   },
   {
+    inputs: [],
+    name: "getAllJobs",
+    outputs: [
+      {
+        internalType: "uint256[]",
+        name: "jobIds",
+        type: "uint256[]",
+      },
+      {
+        internalType: "string[]",
+        name: "jobURIs",
+        type: "string[]",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
     inputs: [
       {
         internalType: "uint256",
@@ -646,7 +687,13 @@ export const CONTRACT_ABI = [
     type: "function",
   },
   {
-    inputs: [],
+    inputs: [
+      {
+        internalType: "address",
+        name: "applicant",
+        type: "address",
+      },
+    ],
     name: "getMyApplications",
     outputs: [
       {

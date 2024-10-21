@@ -1,11 +1,4 @@
-import { CONTRACT_ABI, CONTRACT_ADDRESS } from "src/contract/const";
-import {
-  Applicant,
-  JobApplicantRequest,
-  JobApplication,
-  NftMetadata,
-  ResultObject,
-} from "src/interfaces/const";
+import { Applicant } from "src/interfaces/const";
 
 export function truncateText(text: string, maxChars: number): string {
   if (!text) return "";
@@ -14,73 +7,6 @@ export function truncateText(text: string, maxChars: number): string {
   }
   return text;
 }
-
-export const getBatchCalls = (count: number): any[] => {
-  const requests: any[] = [];
-
-  for (let i = 0; i < count; i++) {
-    requests.push({
-      address: CONTRACT_ADDRESS,
-      abi: CONTRACT_ABI,
-      functionName: "getJobApplicants",
-      args: [i],
-    });
-  }
-
-  return requests;
-};
-
-interface FilteredApplicant extends Applicant {
-  tokenId: number;
-}
-
-export const filterByApplicantAddress = (
-  data: ResultObject[],
-  targetAddress: any
-): FilteredApplicant[] => {
-  const matchingApplicants: FilteredApplicant[] = [];
-
-  data.forEach((item, tokenId) => {
-    const filtered = item.result
-      .filter((applicant) => applicant.applicantAddress === targetAddress)
-      .map((applicant) => ({
-        ...applicant,
-        tokenId, // Include the index of the outer element
-      }));
-
-    matchingApplicants.push(...filtered);
-  });
-
-  return matchingApplicants;
-};
-
-export const combineArrays = (
-  jobNFTs: NftMetadata[],
-  applicants: FilteredApplicant[]
-): JobApplication[] => {
-  const combinedArray: JobApplication[] = [];
-
-  applicants.forEach((applicant) => {
-    const matchingJob = jobNFTs.find(
-      (job) => job.identifier === applicant.tokenId.toString()
-    );
-    if (matchingJob) {
-      combinedArray.push({
-        applicantAddress: applicant.applicantAddress,
-        resumeCID: applicant.resumeCID,
-        tokenId: applicant.tokenId,
-        name: matchingJob.name,
-        description: matchingJob.description,
-        display_image_url: matchingJob.display_image_url,
-        metadata_url: matchingJob.metadata_url,
-        opensea_url: matchingJob.opensea_url,
-        updated_at: matchingJob.updated_at,
-      });
-    }
-  });
-
-  return combinedArray;
-};
 
 export const removeDuplicateApplicants = (
   applicants: Applicant[]
@@ -91,3 +17,56 @@ export const removeDuplicateApplicants = (
       self.findIndex((t) => t.applicantAddress === applicant.applicantAddress)
   );
 };
+
+export function flattenAttributes(obj: any) {
+  if (obj.attributes && Array.isArray(obj.attributes)) {
+    obj.attributes.forEach((attribute: { trait_type: string; value: any }) => {
+      obj[attribute.trait_type.toLowerCase()] = attribute.value;
+    });
+    delete obj.attributes;
+  }
+  return obj;
+}
+
+export function getMetadataUrlByIdentifier(
+  data: any[] | null | undefined,
+  identifier: string
+): string | null {
+  if (!data || !Array.isArray(data)) {
+    return null;
+  }
+
+  const foundItem = data.find((item) => item.identifier === identifier);
+
+  if (foundItem) {
+    return foundItem.metadata_url;
+  }
+
+  return null;
+}
+
+export function updateTraitValue(obj: any, newValue: any[]): void {
+  if (obj.attributes && Array.isArray(obj.attributes)) {
+    const resultTrait = obj.attributes.find(
+      (attribute: { trait_type: string; value: any }) =>
+        attribute.trait_type === "Result"
+    );
+
+    if (resultTrait) {
+      resultTrait.value = newValue; // Update the value for the 'Result' trait
+    } else {
+      console.error(`'Result' trait not found.`);
+    }
+  } else {
+    console.error("Attributes are not in the correct format.");
+  }
+}
+
+export function isStringInArray(
+  array: string[],
+  searchString: string
+): boolean {
+  return array.some(
+    (element) => element.toLowerCase() === searchString.toLowerCase()
+  );
+}

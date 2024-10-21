@@ -11,32 +11,40 @@ import {
 import { useAccount } from "wagmi";
 import TransactionWrapper from "./TransactionWrapper";
 import WalletWrapper from "./WalletWrapper";
-import { uploadFile } from "src/utils/Lighthouse";
+import { uploadFile, uploadText } from "src/utils/Lighthouse";
 import { useJob } from "src/contexts/JobsProvider";
 import { Applicant } from "src/interfaces/const";
 import { Checkbox } from "@nextui-org/react";
+import { getMetadataUrlByIdentifier, updateTraitValue } from "src/utils/helper";
+import axios from "axios";
 
 interface ApplyJobModalProps {
   isOpen: boolean;
   activeTokenID: number;
   setActiveTokenID: React.Dispatch<React.SetStateAction<number>>;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setTokenURI: React.Dispatch<React.SetStateAction<string>>;
+  setDeclareResultModal: React.Dispatch<React.SetStateAction<boolean>>;
+  setSelectedApplicants: React.Dispatch<React.SetStateAction<string[]>>;
+  selectedApplicants: string[];
 }
 
 function JobApplicantModal({
   isOpen,
   activeTokenID,
   setActiveTokenID,
+  setTokenURI,
+  setDeclareResultModal,
+  setSelectedApplicants,
+  selectedApplicants,
   setIsOpen,
 }: ApplyJobModalProps) {
-  const { address } = useAccount();
-  const { fetchAllApplicant } = useJob();
-  const [selectedApplicants, setSelectedApplicants] = useState<string[]>([]);
+  const { fetchAllApplicant, recruiterJobList } = useJob();
+
   const [jobModalPortal, setJobModalPortal] = useState<Element | null>(null);
   const [applicantsList, setApplicantsList] = useState<Applicant[] | null>(
     null
   );
-  const [resume, setResume] = useState<File | null>(null);
   const variants = {
     hidden: { y: 50, opacity: 0 },
     visible: { y: 0, opacity: 1 },
@@ -55,6 +63,21 @@ function JobApplicantModal({
         return prevSelected.filter((address) => address !== applicantAddress);
       }
     });
+  };
+
+  const declareResult = async () => {
+    // console.log(recruiterJobList);
+    const oldTokenURL = getMetadataUrlByIdentifier(
+      recruiterJobList,
+      activeTokenID.toString()
+    );
+    let res = await axios.get(oldTokenURL || "");
+    res = res.data;
+    console.log(res);
+    updateTraitValue(res, selectedApplicants);
+    const newCID = await uploadText(res);
+    setTokenURI(`https://gateway.lighthouse.storage/ipfs/${newCID}`);
+    setDeclareResultModal(true);
   };
 
   const fetchAllApplicantFunc = async () => {
@@ -94,7 +117,7 @@ function JobApplicantModal({
               Recruit
             </div>
 
-            <div className="relative overflow-x-auto sm:rounded-lg">
+            <div className="relative overflow-x-auto sm:rounded-lg flex flex-col flex-grow">
               <table className="w-full text-sm text-left rtl:text-right text-gray-500 ">
                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 ">
                   <tr>
@@ -168,27 +191,20 @@ function JobApplicantModal({
                 </ul>
               </div>
             </div>
-            {/* <button onClick={() => handleRecruit()}>sdsfdf</button> */}
-            {/* <button
-              // onClick={() => setIsOpen(false)}
-              type="submit"
-              className="w-full text-white bg-[#4F46E5] hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5  dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-            >
-              <span className="text-white font-inter font-regular text-sm"></span>
-            </button> */}
-            {address ? (
-              <TransactionWrapper
-                funcName="decideResult"
-                args={[activeTokenID, selectedApplicants]}
-                text="submit"
-                disabled={selectedApplicants.length > 0 ? true : false}
-              />
-            ) : (
-              <WalletWrapper
-                className="w-[450px] max-w-full"
-                text="Sign in to transact"
-              />
-            )}
+            <div className="flex-center">
+              <button
+                onClick={() => {
+                  declareResult();
+                }}
+                disabled={selectedApplicants.length < 1}
+                type="submit"
+                className={`${selectedApplicants.length < 1 ? "opacity-50" : "opacity-100 hover:bg-blue-800"} w-[200px] opacity-0 text-white bg-[#4F46E5] focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5`}
+              >
+                <span className="text-white font-inter font-regular text-sm">
+                  Submit
+                </span>
+              </button>
+            </div>
           </motion.div>
         </div>
       )}

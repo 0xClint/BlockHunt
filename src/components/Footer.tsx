@@ -3,8 +3,7 @@
 import ArrowSvg from "src/svg/ArrowSvg";
 
 const docLinks = [
-
-  { href: "https://github.com/0xClint/CareersOnBase", title: "Github" },
+  { href: "https://github.com/0xClint/BlockHunt", title: "Github" },
 ];
 
 export default function Footer() {

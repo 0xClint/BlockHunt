@@ -15,11 +15,11 @@ const AppLayout = ({ children }: LayoutProps) => {
     <div className="flex flex-col min-h-screen">
       <section className="mt-6 mb-6 flex w-full flex-col md:flex-row">
         <div className="flex w-full flex-row items-center justify-between gap-2 md:gap-0">
-          <Link href={"/"} title="Careers on Base">
-            CareersonBase
+          <Link href={"/"} title="BlockHunt" className="font-semibold text-2xl">
+            BlockHunt
           </Link>
           <div className="flex items-center gap-3">
-            <Link href="/jobs">
+            <Link href="/">
               <button
                 type="button"
                 className="text-blue-700  hover:text-white border border-blue-700 hover:bg-[#4F46E5] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-3 text-center"

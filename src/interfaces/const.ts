@@ -35,14 +35,24 @@ export interface ResultObject {
   result: Applicant[];
   status: string;
 }
-export interface JobApplication {
-  applicantAddress: string;
-  resumeCID: string;
-  tokenId: number;
-  name: string;
+
+//********************************************** */
+
+export interface NFTData {
   description: string;
-  display_image_url: string;
-  metadata_url: string;
-  opensea_url: string;
-  updated_at: string;
+  external_url: string;
+  image: string;
+  name: string;
+  tokenId: number;
+  company: string;
+  type: string;
+  location: string;
+  deadline: string;
+  result: any;
+  categories: string[];
+  socials: string[];
+}
+
+export interface JobApplication extends NFTData {
+  resumeLink: string;
 }

@@ -32,6 +32,18 @@ contract JobNFT is ERC721URIStorage, Ownable {
     function getJobURI(uint256 tokenId) public view returns (string memory) {
         return tokenURI(tokenId);
     }
+
+    function getAllJobs() public view returns (uint256[] memory jobIds, string[] memory jobURIs) {
+        jobIds = new uint256[](_nextTokenId);
+        jobURIs = new string[](_nextTokenId);
+        
+        for (uint256 i = 0; i < _nextTokenId; i++) {
+            jobIds[i] = i; // Job ID
+            jobURIs[i] = tokenURI(i); // Job URI
+        }
+        
+        return (jobIds, jobURIs);
+    }
 }
 
 contract JobApplicants is JobNFT {
@@ -66,11 +78,24 @@ contract JobApplicants is JobNFT {
         applied[jobTokenId][msg.sender] = true;
     }
 
-    function getMyApplications() public view returns (uint256[] memory jobIds, string[] memory resumeURIs, string[] memory jobURIs) {
+    function decideAndUpdateJobURI(
+    uint256 jobTokenId,
+    address[] memory selectedApplicants,
+    string memory newJobURI
+    ) public {
+        if (ownerOf(jobTokenId) != msg.sender) {
+            revert OnlyJobOwnerCanSelect(jobTokenId);
+        }
+        decideResult(jobTokenId, selectedApplicants);
+        updateJobURI(jobTokenId, newJobURI);
+    }
+
+
+    function getMyApplications(address applicant) public view returns (uint256[] memory jobIds, string[] memory resumeURIs, string[] memory jobURIs) {
         uint256 count;
         
         for (uint256 i = 0; i < _nextTokenId; i++) {
-            if (applied[i][msg.sender]) count++;
+            if (applied[i][applicant]) count++;
         }
 
         jobIds = new uint256[](count);
@@ -79,9 +104,9 @@ contract JobApplicants is JobNFT {
         uint256 index = 0;
 
         for (uint256 i = 0; i < _nextTokenId; i++) {
-            if (applied[i][msg.sender]) {
+            if (applied[i][applicant]) {
                 for (uint256 j = 0; j < jobApplicants[i].length; j++) {
-                    if (jobApplicants[i][j].applicantAddress == msg.sender) {
+                    if (jobApplicants[i][j].applicantAddress == applicant) {
                         jobIds[index] = i;                             
                         resumeURIs[index] = jobApplicants[i][j].resumeCID;
                         jobURIs[index] = tokenURI(i);                 
@@ -93,6 +118,7 @@ contract JobApplicants is JobNFT {
 
         return (jobIds, resumeURIs, jobURIs);
     }
+
 
     function getJobApplicants(uint256 jobTokenId) public view returns (Applicant[] memory) {
         return jobApplicants[jobTokenId];

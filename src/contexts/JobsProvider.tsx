@@ -9,12 +9,12 @@ import {
 } from "react";
 import { publicClient } from "src/client";
 import { CONTRACT_ABI, CONTRACT_ADDRESS } from "src/contract/const";
-import { Applicant, JobApplication, NftMetadata } from "src/interfaces/const";
+import { JobApplication, NFTData, NftMetadata } from "src/interfaces/const";
 import {
-  combineArrays,
-  filterByApplicantAddress,
-  getBatchCalls,
+  flattenAttributes,
+
   removeDuplicateApplicants,
+
 } from "src/utils/helper";
 import { useAccount } from "wagmi";
 
@@ -31,7 +31,7 @@ const JobProviderFn = () => {
   const [applicationsList, setApplicationsList] = useState<
     JobApplication[] | null
   >(null);
-  const [jobsList, setJobList] = useState<NftMetadata[] | null>(null);
+  const [jobsList, setJobList] = useState<NFTData[] | null>(null);
   const [recruiterJobList, setRecruiterJobList] = useState<
     NftMetadata[] | null
   >(null);
@@ -39,38 +39,63 @@ const JobProviderFn = () => {
   const { address } = useAccount();
 
   const fetchAllJobs = async () => {
+    try {
+      const data: any = await publicClient.readContract({
+        address: CONTRACT_ADDRESS,
+        abi: CONTRACT_ABI,
+        functionName: "getAllJobs",
+        args: [],
+      });
+      console.log(data);
+      const indices = data[0];
+      const links = data[1];
+
+      let tempdata = [];
+      console.log(data);
+      for (let i = 0; i < data[0].length; i++) {
+        const res = await axios.get(data[1][i]);
+        let temp = flattenAttributes(res.data);
+        // console.log(temp);
+        temp.tokenId = Number(data[0][i]);
+
+        tempdata.push(temp);
+      }
+      console.log(tempdata);
+
+      setJobList(tempdata);
+      return tempdata;
+    } catch (error) {
+      console.error("Error fetching job applications:", error);
+      return null;
+    }
+  };
+
+  const getUserApplications = async () => {
     if (address) {
       try {
-        const url = `
-        https://testnets-api.opensea.io/api/v2/chain/base_sepolia/contract/${CONTRACT_ADDRESS}/nfts`;
-        const response = await axios.get<ApiResponse>(url, {
-          headers: {
-            Accept: "application/json",
-          },
+        const data: any = await publicClient.readContract({
+          address: CONTRACT_ADDRESS,
+          abi: CONTRACT_ABI,
+          functionName: "getMyApplications",
+          args: [address],
         });
-        setJobList(response.data.nfts);
-        console.log(response.data.nfts);
+        let tempdata = [];
+        console.log(data);
+        for (let i = 0; i < data[0].length; i++) {
+          const res = await axios.get(data[2][i]);
+          let temp = flattenAttributes(res.data);
 
-        const multiCalldata = getBatchCalls(Number(response.data.nfts.length));
-
-        try {
-          const data: any = await publicClient.multicall({
-            contracts: multiCalldata,
-          });
-
-          const result = filterByApplicantAddress(data, address);
-          // console.log(result);
-          console.log(combineArrays(response.data.nfts, result));
-
-          setApplicationsList(combineArrays(response.data.nfts, result));
-        } catch (error) {
-          console.error("Error fetching job applications:", error);
-          setApplicationsList(null); // Handle error state
-          return null;
+          temp.tokenId = Number(data[0][i]);
+          temp.resumeLink = data[1][i];
+          tempdata.push(temp);
         }
+        console.log(tempdata);
+        setApplicationsList(tempdata);
+        // return data;
       } catch (error) {
-        console.error("Error fetching NFTs:", error);
-        throw error;
+        console.error("Error fetching job applications:", error);
+
+        // return null;
       }
     }
   };
@@ -87,7 +112,7 @@ const JobProviderFn = () => {
         });
         // console.log("tokenID", tokenID, "applicant", data);
         const uniqueApplicants = removeDuplicateApplicants(data);
-        // console.log("applicant", uniqueApplicants);
+        console.log("applicant", uniqueApplicants);
         return uniqueApplicants;
       } catch (error) {
         console.error("Error fetching job applications:", error);
@@ -109,7 +134,7 @@ const JobProviderFn = () => {
           },
         });
         // setJobList(response.data.nfts);
-        // console.log(response.data.nfts);
+        console.log(response.data.nfts);
         const data = response.data.nfts.filter(
           (nft) =>
             nft.contract.toLocaleLowerCase() ===
@@ -130,6 +155,10 @@ const JobProviderFn = () => {
 
   useEffect(() => {
     fetchRecruiterJobsList();
+  }, [address]);
+
+  useEffect(() => {
+    getUserApplications();
   }, [address]);
 
   return {

@@ -2,6 +2,7 @@
 import { Plus } from "lucide-react";
 import Link from "next/link";
 import React, { useState } from "react";
+import DeclareResultModal from "src/components/DeclareResultModal";
 import JobApplicantModal from "src/components/JobApplicantModal";
 import { Badge, BadgeStatus } from "src/components/UI";
 import { useJob } from "src/contexts/JobsProvider";
@@ -9,17 +10,32 @@ import { truncateText } from "src/utils/helper";
 
 const Recruit = () => {
   const [jobApplicantModal, setJobApplicantModal] = useState<boolean>(false);
+  const [declareResultModal, setDeclareResultModal] = useState<boolean>(false);
+  const [tokenURI, setTokenURI] = useState<string>("");
+  const [selectedApplicants, setSelectedApplicants] = useState<string[]>([]);
   const [activeTokenID, setActiveTokenID] = useState<number>(-1);
   const { recruiterJobList } = useJob();
+  // console.log(recruiterJobList);
   // const fetchJobsApplications = async () => {};
 
   return (
     <div className="flex h-full w-96 max-w-full flex-col px-1 font-sans md:w-[1008px]">
+      <DeclareResultModal
+        isOpen={declareResultModal}
+        tokenID={activeTokenID}
+        tokenURI={tokenURI}
+        selectedApplicants={selectedApplicants}
+        setIsOpen={setDeclareResultModal}
+      />
       <JobApplicantModal
         isOpen={jobApplicantModal}
         setIsOpen={setJobApplicantModal}
+        selectedApplicants={selectedApplicants}
+        setSelectedApplicants={setSelectedApplicants}
         activeTokenID={activeTokenID}
+        setTokenURI={setTokenURI}
         setActiveTokenID={setActiveTokenID}
+        setDeclareResultModal={setDeclareResultModal}
       />
       <div className="w-full flex-center justify-between">
         <h2 className="text-2xl font-semibold my-3">Job Dashboard</h2>
@@ -40,6 +56,7 @@ const Recruit = () => {
               description,
               updated_at,
               identifier,
+              metadata_url,
             }) => {
               return (
                 <div
