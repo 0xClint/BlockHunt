@@ -86,6 +86,7 @@ function JobApplicantModal({
               onClick={() => {
                 setIsOpen(false);
                 setActiveTokenID(-1);
+                setSelectedApplicants([]);
               }}
             />
 
@@ -144,9 +145,7 @@ function JobApplicantModal({
                                   e.target.checked
                                 )
                               }
-                            >
-                              Small
-                            </Checkbox>
+                            ></Checkbox>
                           </td>
                         </tr>
                       );

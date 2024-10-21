@@ -1,4 +1,6 @@
 "use client";
+import { Plus } from "lucide-react";
+import Link from "next/link";
 import React, { useState } from "react";
 import JobApplicantModal from "src/components/JobApplicantModal";
 import { Badge, BadgeStatus } from "src/components/UI";
@@ -19,7 +21,15 @@ const Recruit = () => {
         activeTokenID={activeTokenID}
         setActiveTokenID={setActiveTokenID}
       />
-      <h2 className="text-2xl font-semibold my-3">Job Dashboard</h2>
+      <div className="w-full flex-center justify-between">
+        <h2 className="text-2xl font-semibold my-3">Job Dashboard</h2>
+        <Link
+          href={"/recruit/create"}
+          className="text-blue-700 h-10 hover:text-white border border-blue-700 hover:bg-[#4F46E5] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+        >
+          Create Job
+        </Link>
+      </div>
 
       <section className=" flex w-full flex-col  justify-around gap-7 rounded-xl bg-gray-100 p-8 md:grow">
         <div className=" flex flex-col gap-5">

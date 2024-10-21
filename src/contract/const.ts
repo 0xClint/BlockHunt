@@ -1,4 +1,4 @@
-export const CONTRACT_ADDRESS = "0x97F1Ce0e66A3e939Feb5ABAdefB0FA6D431b5144";
+export const CONTRACT_ADDRESS = "0x51F24aF0A5bfC2258C18e9ba4bfBC0946a73da2A";
 export const CONTRACT_ABI = [
   {
     inputs: [
@@ -8,51 +8,13 @@ export const CONTRACT_ABI = [
         type: "uint256",
       },
       {
-        internalType: "string",
-        name: "resumeCID",
-        type: "string",
-      },
-    ],
-    name: "applyToJob",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
         internalType: "address",
-        name: "to",
+        name: "applicant",
         type: "address",
       },
-      {
-        internalType: "uint256",
-        name: "tokenId",
-        type: "uint256",
-      },
     ],
-    name: "approve",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "jobTokenId",
-        type: "uint256",
-      },
-      {
-        internalType: "address[]",
-        name: "selectedApplicants",
-        type: "address[]",
-      },
-    ],
-    name: "decideResult",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
+    name: "AlreadyApplied",
+    type: "error",
   },
   {
     inputs: [
@@ -160,6 +122,39 @@ export const CONTRACT_ABI = [
   {
     inputs: [
       {
+        internalType: "uint256",
+        name: "tokenId",
+        type: "uint256",
+      },
+    ],
+    name: "JobDoesNotExist",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "jobTokenId",
+        type: "uint256",
+      },
+    ],
+    name: "OnlyJobOwnerCanSelect",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "tokenId",
+        type: "uint256",
+      },
+    ],
+    name: "OnlyOwnerCanUpdateURI",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
         internalType: "address",
         name: "owner",
         type: "address",
@@ -177,6 +172,17 @@ export const CONTRACT_ABI = [
       },
     ],
     name: "OwnableUnauthorizedAccount",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "jobTokenId",
+        type: "uint256",
+      },
+    ],
+    name: "ResultAlreadyDeclared",
     type: "error",
   },
   {
@@ -262,25 +268,6 @@ export const CONTRACT_ABI = [
     type: "event",
   },
   {
-    inputs: [
-      {
-        internalType: "string",
-        name: "jobURI",
-        type: "string",
-      },
-    ],
-    name: "mintJob",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "tokenId",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
     anonymous: false,
     inputs: [
       {
@@ -298,6 +285,104 @@ export const CONTRACT_ABI = [
     ],
     name: "OwnershipTransferred",
     type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "from",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "to",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "uint256",
+        name: "tokenId",
+        type: "uint256",
+      },
+    ],
+    name: "Transfer",
+    type: "event",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "jobTokenId",
+        type: "uint256",
+      },
+      {
+        internalType: "string",
+        name: "resumeCID",
+        type: "string",
+      },
+    ],
+    name: "applyToJob",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "to",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "tokenId",
+        type: "uint256",
+      },
+    ],
+    name: "approve",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "jobTokenId",
+        type: "uint256",
+      },
+      {
+        internalType: "address[]",
+        name: "selectedApplicants",
+        type: "address[]",
+      },
+    ],
+    name: "decideResult",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "string",
+        name: "jobURI",
+        type: "string",
+      },
+    ],
+    name: "mintJob",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "tokenId",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "function",
   },
   {
     inputs: [],
@@ -376,31 +461,6 @@ export const CONTRACT_ABI = [
     type: "function",
   },
   {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "address",
-        name: "from",
-        type: "address",
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "to",
-        type: "address",
-      },
-      {
-        indexed: true,
-        internalType: "uint256",
-        name: "tokenId",
-        type: "uint256",
-      },
-    ],
-    name: "Transfer",
-    type: "event",
-  },
-  {
     inputs: [
       {
         internalType: "address",
@@ -434,6 +494,48 @@ export const CONTRACT_ABI = [
     name: "transferOwnership",
     outputs: [],
     stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "tokenId",
+        type: "uint256",
+      },
+      {
+        internalType: "string",
+        name: "jobURI",
+        type: "string",
+      },
+    ],
+    name: "updateJobURI",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    name: "applied",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
+    stateMutability: "view",
     type: "function",
   },
   {
@@ -538,6 +640,29 @@ export const CONTRACT_ABI = [
         internalType: "string",
         name: "",
         type: "string",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "getMyApplications",
+    outputs: [
+      {
+        internalType: "uint256[]",
+        name: "jobIds",
+        type: "uint256[]",
+      },
+      {
+        internalType: "string[]",
+        name: "resumeURIs",
+        type: "string[]",
+      },
+      {
+        internalType: "string[]",
+        name: "jobURIs",
+        type: "string[]",
       },
     ],
     stateMutability: "view",

@@ -8,6 +8,7 @@ import {
 } from "src/interfaces/const";
 
 export function truncateText(text: string, maxChars: number): string {
+  if (!text) return "";
   if (text.length > maxChars) {
     return `${text.substring(0, maxChars)}...`;
   }
